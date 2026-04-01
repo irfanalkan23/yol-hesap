@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yol Ücreti Hesaplama | Türkiye</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <!-- Background Animated Blobs -->
+    <div class="background-anim">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Main Glassmorphism Container -->
+    <div class="app-container glass-panel">
+      <header class="app-header">
+        <h1>Yol Ücreti Hesapla</h1>
+        <p>Türkiye Otoyol, Köprü ve Tünel Geçiş Ücretleri</p>
+      </header>
+
+      <form id="calc-form">
+        <div class="input-row">
+          <div class="form-group">
+            <label for="source">Kalkış Noktası</label>
+            <select id="source" required>
+              <option value="" disabled selected>Şehir Seçiniz</option>
+            </select>
+          </div>
+
+          <div class="form-group swap-wrapper">
+             <button type="button" id="swap-btn" aria-label="Yer Değiştir" title="Kalkış ve Varış Noktasını Değiştir">
+               &#x21C4;
+             </button>
+          </div>
+
+          <div class="form-group">
+            <label for="target">Varış Noktası</label>
+            <select id="target" required>
+              <option value="" disabled selected>Şehir Seçiniz</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="vehicle_class">Araç Sınıfı</label>
+          <select id="vehicle_class" required>
+            <option value="" disabled selected>Araç Sınıfınızı Belirleyin</option>
+          </select>
+        </div>
+
+        <button type="submit" class="primary-btn">Olası Rotaları Bul ve Hesapla</button>
+      </form>
+
+      <div id="results" class="results-section hidden">
+        <h2 class="results-title">Alternatif Güzergahlar</h2>
+        <div id="routes-list" class="routes-list"></div>
+      </div>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
