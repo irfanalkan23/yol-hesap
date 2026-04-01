@@ -135,16 +135,23 @@ form.addEventListener('submit', (e) => {
   paths.sort((a, b) => a.totalCost - b.totalCost);
 
   const minHops = Math.min(...paths.map(p => p.path.length));
+  
+  // En ucuz maliyeti referans alarak aşırı dolambaçlıları (Çanakkale'den dolaşıp İzmir'e giden vs.) ele
+  const minCost = paths[0].totalCost;
 
   paths = paths.filter(p => {
-    // İstanbul (veya şehirler) içi köprü ayrımlarını yakalayabilmesi için hop toleransını +3 verdik. 
-    // Böylece hem KMO, hem FSM(1.,2.), hem Osmangazi opsiyonu dökülecek ve absürt rotalar elenecektir.
+    // İstanbul içi köprü geçiş serbestisini yakalamak için hop limiti +3
     if (p.path.length > minHops + 3) return false;
+    
+    // Eğer maliyet, en ucuz rotadan 1500 TL den daha yüksekse, muhtemelen Türkiye turu atıyordur.
+    // Osmangazi Köprüsü vs. gösterilebilmesi için Oransal (2x vb.) yerine Mutlak (1500 TL) fark koyduk.
+    if (p.totalCost > minCost + 1500) return false;
+
     return true;
   });
 
-  // Seçenek sayısını 4 e çıkaralım (Tüm köprü olasılıklarını görmek için)
-  paths = paths.slice(0, 4);
+  // Olası mantıklı tüm körfez ve köprü opsiyonlarının dökülebilmesi için limiti 6-7 ye çıkarıyoruz
+  paths = paths.slice(0, 6);
 
   routesList.innerHTML = paths.map((path, index) => renderRouteCard(path, index, paths.length)).join('');
   resultsSection.scrollIntoView({ behavior: 'smooth' });
