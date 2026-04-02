@@ -344,3 +344,102 @@ option {
     transform: rotate(270deg);
   }
 }
+
+/* Documents Section */
+.pdf-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.pdf-link:hover {
+  background: rgba(96, 165, 250, 0.15);
+  border-color: rgba(96, 165, 250, 0.5);
+  transform: translateY(-2px);
+  color: #60a5fa;
+}
+
+/* Modal Lightbox */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-content-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Allows panning via scrolling if image is too big */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 90vh; /* Default fit screen behavior */
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  transform: scale(1);
+  transition: transform 0.3s ease, max-width 0.3s ease, max-height 0.3s ease;
+  cursor: zoom-in;
+}
+
+/* When zoomed in */
+.modal-content.zoomed {
+  max-width: 250%; /* Allow image to be bigger than screen to read text */
+  max-height: none;
+  cursor: zoom-out;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+  z-index: 1001;
+  cursor: pointer;
+  background: rgba(0,0,0,0.5);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: #bbb;
+  background: rgba(255,255,255,0.2);
+}

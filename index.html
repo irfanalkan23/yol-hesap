@@ -23,45 +23,96 @@
         <p>Türkiye Otoyol, Köprü ve Tünel Geçiş Ücretleri</p>
       </header>
 
-      <form id="calc-form">
-        <div class="input-row">
-          <div class="form-group">
-            <label for="source">Kalkış Noktası</label>
-            <select id="source" required>
-              <option value="" disabled selected>Şehir Seçiniz</option>
-            </select>
-          </div>
+      <div class="form-group full-width" style="margin-bottom: 1.5rem">
+        <label for="vehicle_class">Araç Sınıfı</label>
+        <select id="vehicle_class" required>
+          <option value="" disabled selected>Araç Sınıfınızı Belirleyin</option>
+        </select>
+      </div>
 
-          <div class="form-group swap-wrapper">
-             <button type="button" id="swap-btn" aria-label="Yer Değiştir" title="Kalkış ve Varış Noktasını Değiştir">
-               &#x21C4;
-             </button>
-          </div>
+      <div id="setup-section" class="form-group full-width">
+        <label for="source">Başlangıç Noktası</label>
+        <select id="source">
+          <option value="" disabled selected>Yolculuğa Başlayacağınız Noktayı Seçin</option>
+        </select>
+      </div>
 
-          <div class="form-group">
-            <label for="target">Varış Noktası</label>
-            <select id="target" required>
-              <option value="" disabled selected>Şehir Seçiniz</option>
-            </select>
+      <div id="route-builder-section" class="hidden">
+        <div class="route-card" style="margin-bottom: 1.5rem;">
+          <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-main);">Seçilen Güzergah</h3>
+          <div id="route-steps-container" class="route-segments-container">
+            <!-- Seçilen adımlar buraya gelecek -->
+          </div>
+          
+          <div class="route-header" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-weight: 600; color: var(--text-muted);">Toplam Geçiş Ücreti:</div>
+            <div id="total-cost" class="route-price">0,00 ₺</div>
           </div>
         </div>
 
-        <div class="form-group full-width">
-          <label for="vehicle_class">Araç Sınıfı</label>
-          <select id="vehicle_class" required>
-            <option value="" disabled selected>Araç Sınıfınızı Belirleyin</option>
+        <div class="form-group full-width" id="next-route-group">
+          <label for="next_route">Sıradaki Yönü / Rotayı Seçin</label>
+          <select id="next_route">
+            <option value="" disabled selected>Lütfen Bağlantı Yolunu Seçin</option>
+            <!-- Bağlantılar dinamik olarak eklenecek -->
           </select>
         </div>
 
-        <button type="submit" class="primary-btn">Olası Rotaları Bul ve Hesapla</button>
-      </form>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button id="undo-btn" class="primary-btn" style="flex: 1; background: rgba(255,255,255,0.1); color: var(--text-main);">Geri Al</button>
+          <button id="reset-btn" class="primary-btn" style="flex: 1; background: linear-gradient(135deg, #ef4444, #b91c1c);">Sıfırla</button>
+        </div>
+      </div>
 
-      <div id="results" class="results-section hidden">
-        <h2 class="results-title">Alternatif Güzergahlar</h2>
-        <div id="routes-list" class="routes-list"></div>
+      <!-- Otoyol Haritası Bölümü -->
+      <div class="documents-section" style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border);">
+        <h3 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+          KMO Otoyol Güzergahı
+        </h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Kaynak: <a href="https://www.kuzeymarmaraotoyolu.com/guzergah" target="_blank" style="color: #60a5fa; text-decoration: none;">Kuzey Marmara Otoyolu İşletmesi</a>
+        </p>
+        
+        <div style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); background: var(--bg-color);">
+          <img src="https://www.kuzeymarmaraotoyolu.com/Content/images/Otoyol-Kullanimi/Guzergah/Guncel-Guzergah-Haritasi.jpg" alt="Güncel Güzergah Haritası" style="width: 100%; height: auto; display: block; cursor: pointer;" id="map-image" />
+        </div>
+      </div>
+
+      <!-- Faydalı Dokümanlar Bölümü -->
+      <div class="documents-section" style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border);">
+        <h3 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Faydalı Dokümanlar
+        </h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Kaynak: <a href="https://www.kgm.gov.tr/Sayfalar/KGM/SiteTr/Otoyollar/UcretlerYeni.aspx" target="_blank" style="color: #60a5fa; text-decoration: none;">Karayolları Genel Müdürlüğü (KGM)</a>
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="/pdfs/13-YSSKuzeyCevreYolu.pdf" target="_blank" class="pdf-link" title="YSS Köprüsü ve Kuzey Çevre Yolu">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            YSS Köprüsü (Kuzey Çevre Yolu)
+          </a>
+          <a href="/pdfs/14-KMOAvrupaKinali-Odayeri.pdf" target="_blank" class="pdf-link" title="Kuzey Marmara Otoyolu Avrupa Kesimi">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            KMO Avrupa (Kınalı - Odayeri)
+          </a>
+          <a href="/pdfs/15-KMOAnadoluKurtkoy-Akyazi.pdf" target="_blank" class="pdf-link" title="Kuzey Marmara Otoyolu Anadolu Kesimi">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            KMO Anadolu (Kurtköy - Akyazı)
+          </a>
+        </div>
       </div>
     </div>
     
+    <!-- Image Lightbox Modal -->
+    <div id="image-modal" class="modal hidden">
+      <span class="close-modal">&times;</span>
+      <div class="modal-content-container">
+        <img class="modal-content" id="modal-image">
+      </div>
+    </div>
+
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>
