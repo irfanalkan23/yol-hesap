@@ -392,7 +392,7 @@ option {
 .modal-content-container {
   width: 100%;
   height: 100%;
-  overflow: auto; /* Allows panning via scrolling if image is too big */
+  overflow: hidden; /* Prevent native scrollbars during pan/zoom */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -407,16 +407,10 @@ option {
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  transform-origin: center center;
   transform: scale(1);
   transition: transform 0.3s ease, max-width 0.3s ease, max-height 0.3s ease;
   cursor: zoom-in;
-}
-
-/* When zoomed in */
-.modal-content.zoomed {
-  max-width: 250%; /* Allow image to be bigger than screen to read text */
-  max-height: none;
-  cursor: zoom-out;
 }
 
 .close-modal {

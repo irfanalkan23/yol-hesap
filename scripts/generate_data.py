@@ -29,7 +29,7 @@ def generate():
         ("kmo_avr_nakkas", "KMO Avrupa - Nakkaş"),
         ("kmo_avr_yassioren", "KMO Avrupa - Yassıören"),
         ("kmo_avr_tayakadin", "KMO Avrupa - Tayakadın"),
-        ("kmo_avr_fatih", "KMO Avrupa - Fatih (Odayeri Ayrımı)")
+        ("kmo_avr_fatih", "KMO Avrupa - Fatih (Havalimanı bağlantısı)")
     ]
 
     yss_nodes = [
@@ -44,14 +44,15 @@ def generate():
         ("yss_alemdag", "Kuzey Çevre Yolu - Alemdağ"),
         ("yss_pasakoy", "Kuzey Çevre Yolu - Paşaköy"),
         ("yss_mecidiye", "Kuzey Çevre Yolu - Mecidiye"),
-        ("yss_kurnakoy", "Kuzey Çevre Yolu - Kurnaköy")
+        ("yss_kurnakoy", "Kuzey Çevre Yolu - Kurnaköy (Osmangazi Köprüsü ayrımı)")
     ]
 
     kmo_anadolu_nodes = [
+        ("kmo_ana_kurtkoy", "KMO Anadolu - Kurtköy (Sabiha Gökçen Havalimanı bağlantısı)"),
         ("kmo_ana_kurnakoy2", "KMO Anadolu - Kurnaköy 2"),
         ("kmo_ana_istanbulpark", "KMO Anadolu - İstanbulpark"),
         ("kmo_ana_balcik", "KMO Anadolu - Balçık"),
-        ("kmo_ana_mermerciler", "KMO Anadolu - Mermerciler"),
+        ("kmo_ana_mermerciler", "KMO Anadolu - Mermerciler (Osmangazi Köprüsü ayrımı)"),
         ("kmo_ana_sevindikli", "KMO Anadolu - Sevindikli"),
         ("kmo_ana_ilimtepe", "KMO Anadolu - İlimtepe"),
         ("kmo_ana_izmitkuzey", "KMO Anadolu - İzmit Kuzey"),

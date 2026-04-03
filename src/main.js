@@ -217,25 +217,45 @@ resetBtn.addEventListener('click', () => {
 
 populateSelects();
 
-// Lightbox Modal Logic
+// Lightbox Modal Logic (Interactive Zoom & Pan)
 const mapImage = document.getElementById('map-image');
 const modal = document.getElementById('image-modal');
 const modalImg = document.getElementById('modal-image');
 const closeModal = document.querySelector('.close-modal');
+const modalContainer = document.querySelector('.modal-content-container');
+
+let scale = 1;
+let panning = false;
+let pointX = 0;
+let pointY = 0;
+let startX = 0;
+let startY = 0;
+
+function setTransform() {
+  modalImg.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+}
+
+function resetZoom() {
+  scale = 1;
+  pointX = 0;
+  pointY = 0;
+  modalImg.style.transition = 'transform 0.3s ease';
+  setTransform();
+  setTimeout(() => { modalImg.style.transition = 'none'; }, 300);
+}
 
 if (mapImage) {
   mapImage.addEventListener('click', function() {
     modal.classList.remove('hidden');
     modalImg.src = this.src;
-    // Reset zoom state when opened
-    modalImg.classList.remove('zoomed');
+    resetZoom();
   });
 }
 
 // Close Modal
 const closeAction = () => {
   modal.classList.add('hidden');
-  modalImg.classList.remove('zoomed');
+  resetZoom();
 };
 
 closeModal.addEventListener('click', closeAction);
@@ -247,8 +267,76 @@ modal.addEventListener('click', function(e) {
   }
 });
 
-// Zoom Toggle on Image Click
-modalImg.addEventListener('click', function() {
-  this.classList.toggle('zoomed');
-  // Optional: Center the scroll after zooming out/in if desired
+// Pan and Zoom Logic
+modalContainer.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  
+  const xs = (e.clientX - pointX) / scale;
+  const ys = (e.clientY - pointY) / scale;
+  
+  if (e.deltaY < 0) {
+    scale *= 1.2;
+  } else {
+    scale /= 1.2;
+  }
+  
+  if (scale < 1) scale = 1;
+  if (scale > 8) scale = 8;
+  
+  if (scale === 1) {
+    pointX = 0;
+    pointY = 0;
+  } else {
+    pointX = e.clientX - xs * scale;
+    pointY = e.clientY - ys * scale;
+  }
+  
+  modalImg.style.transition = 'none';
+  setTransform();
+}, { passive: false });
+
+modalImg.addEventListener('mousedown', (e) => {
+  e.preventDefault();
+  if (scale > 1) {
+    panning = true;
+    startX = e.clientX - pointX;
+    startY = e.clientY - pointY;
+    modalImg.style.cursor = 'grabbing';
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  panning = false;
+  modalImg.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!panning) return;
+  e.preventDefault();
+  pointX = e.clientX - startX;
+  pointY = e.clientY - startY;
+  setTransform();
+});
+
+// Click to zoom in if not zoomed, or reset if zoomed
+modalImg.addEventListener('click', (e) => {
+  if (scale > 1) {
+    resetZoom();
+  } else {
+    scale = 1.8; // Daha az yakınlaştır (önceki: 3)
+    const rect = modalImg.getBoundingClientRect();
+    const xs = (e.clientX - rect.left) / 1; 
+    const ys = (e.clientY - rect.top) / 1;
+    
+    // Daha basit merkezleme yaklaşımı
+    pointX = (window.innerWidth / 2) - e.clientX;
+    pointY = (window.innerHeight / 2) - e.clientY;
+    
+    pointX *= scale;
+    pointY *= scale;
+
+    modalImg.style.transition = 'transform 0.3s ease';
+    setTransform();
+    setTimeout(() => { modalImg.style.transition = 'none'; }, 300);
+  }
 });
